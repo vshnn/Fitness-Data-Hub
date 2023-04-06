@@ -133,14 +133,18 @@ INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 	('Dumbbell',8,1),
 	('Dumbbell',10,1),
 	('Dumbbell',20,1),
-
-	('Dumbbell',1,1),
-	('Dumbbell',1,1),
-	('Barbell',NULL,1),
-	('EZ bar',NULL,1),
 	('Kettlebell',8,1),
 	('Kettlebell',12,1),
 	('Kettlebell',16,1),
+	('Punching Bag',1,1),
+	('Treadmill',NULL,1),
+	('Skipping rope',NULL,1),
+	('Smith Machine',NULL,1),
+	('Bench Press Machine',NULL,1),
+	('Barbell',NULL,1),
+	('EZ bar',NULL,1);
+
+
 	
 	
 	
