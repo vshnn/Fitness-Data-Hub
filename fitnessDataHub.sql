@@ -18,6 +18,7 @@ CREATE TABLE trainer(
     FOREIGN KEY (gym_id) REFERENCES gym(gym_id)
 );
 
+-- (modified)
 CREATE TABLE membership_plan(
     type_name VARCHAR(25) PRIMARY KEY,
     expiry_date DATE NOT NULL,
@@ -47,6 +48,7 @@ CREATE TABLE competition(
     FOREIGN KEY (member_id) REFERENCES member(member_id)
 );
 
+-- (modified)
 CREATE TABLE equipment(
     equipment_id INTEGER PRIMARY KEY,
     equipment_name VARCHAR(30) NOT NULL,
@@ -95,14 +97,54 @@ INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
 	('Maria','Thampanoor',8769611599,4,1),
 	('Rajesh','Pettah',7255480246,3,1),
 	('Jagath','Kowdiar',9971077633,2,1),
-	('Jennifer','Nedumangad',7643856016 ,1,1)
-;	
+	('Jennifer','Nedumangad',7643856016 ,1,1);	
+
+-- modified table membership_plan 
+ALTER TABLE membership_plan RENAME COLUMN expiry_date to validity;
+ALTER TABLE membership_plan MODIFY COLUMN validity INT NOT NULL;
+
+-- inserting values to table membership_plan
+INSERT INTO membership_plan VALUES
+	('Platinum',12,15000),
+	('Gold',6,8000),
+	('Silver',3,5000 ),
+	('Bronze',1, 2000);
+
+	
+-- modified table equipment
+DROP TABLE using_equipment;
+ALTER TABLE equipment MODIFY equipment_id INT(11) AUTO_INCREMENT;
+CREATE TABLE using_equipment(
+    member_id INTEGER,
+    trainer_id INTEGER,
+    equipment_id INTEGER,
+    date_of_use DATETIME NOT NULL,
+    PRIMARY KEY (member_id,date_of_use),
+    FOREIGN KEY (member_id) REFERENCES member(member_id),
+    FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
+    FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
+);
+
+
+-- inserting values to table equipment
+INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
+	('Dumbbell',2,1),
+	('Dumbbell',5,1),
+	('Dumbbell',8,1),
+	('Dumbbell',10,1),
+	('Dumbbell',20,1),
+
+	('Dumbbell',1,1),
+	('Dumbbell',1,1),
+	('Barbell',NULL,1),
+	('EZ bar',NULL,1),
+	('Kettlebell',8,1),
+	('Kettlebell',12,1),
+	('Kettlebell',16,1),
 	
 	
 	
-
-
-
+	
 
 
 
