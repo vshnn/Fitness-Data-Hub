@@ -1,5 +1,0 @@
-//add your NAME here if you're currently working on the sql file 
-//this is to avoid concurrency
-
-Working Now ---
-Vishnu V P
