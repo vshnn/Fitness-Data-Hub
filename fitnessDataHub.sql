@@ -82,3 +82,50 @@ CREATE TABLE using_equipment(
     FOREIGN KEY (trainer_id) REFERENCES trainer(trainer_id),
     FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
 );
+
+-- 06/04/2023
+-- inserting values to table gym
+INSERT INTO gym(gym_name,location) VALUES
+	('Rothman Gym','Trivandrum');
+	
+-- inserting values to table trainer
+INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
+	('Michael','Palayam',9553798011,6,1),
+	('Justin','Vanchiyoor',8351280095,5,1),
+	('Maria','Thampanoor',8769611599,4,1),
+	('Rajesh','Pettah',7255480246,3,1),
+	('Jagath','Kowdiar',9971077633,2,1),
+	('Jennifer','Nedumangad',7643856016 ,1,1)
+;	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
