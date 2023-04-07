@@ -125,7 +125,6 @@ CREATE TABLE using_equipment(
     FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
 );
 
-
 -- inserting values to table equipment
 INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 	('Dumbbell',2,1),
@@ -144,4 +143,28 @@ INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 	('Pull up bars',NULL,1),
 	('Barbell',NULL,1),
 	('EZ bar',NULL,1);
+
+	
+-- 07/04/2023
+-- modified table equipment
+DELETE FROM equipment;
+ALTER TABLE equipment ADD column equipment_count INT(11);	
+INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
+	('Dumbbell',2,6,1),
+	('Dumbbell',5,6,1),
+	('Dumbbell',10,6,1),
+	('Kettlebell',8,3,1),
+	('Kettlebell',12,3,1),
+	('Kettlebell',16,3,1),
+	('Punching Bag',1,2,1),
+	('Treadmill',NULL,8,1),
+	('Skipping rope',NULL,5,1),
+	('Smith machine',NULL,3,1),
+	('Bench press machine',NULL,3,1),
+	('Leg press machine',NULL,2,1),
+	('Lats pulley',NULL,2,1),
+	('Pull up bars',NULL,4,1),
+	('Barbell',NULL,5,1),
+	('EZ bar',NULL,5,1);
+
 
