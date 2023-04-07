@@ -101,7 +101,7 @@ INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
 
 -- modified table membership_plan 
 ALTER TABLE membership_plan RENAME COLUMN expiry_date to validity;
-ALTER TABLE membership_plan MODIFY COLUMN validity INT NOT NULL;
+ALTER TABLE membership_plan MODIFY COLUMN validity INTEGER NOT NULL;
 
 -- inserting values to table membership_plan
 INSERT INTO membership_plan VALUES
@@ -113,7 +113,7 @@ INSERT INTO membership_plan VALUES
 	
 -- modified table equipment
 DROP TABLE using_equipment;
-ALTER TABLE equipment MODIFY equipment_id INT(11) AUTO_INCREMENT;
+ALTER TABLE equipment MODIFY equipment_id INTEGER(11) AUTO_INCREMENT;
 CREATE TABLE using_equipment(
     member_id INTEGER,
     trainer_id INTEGER,
