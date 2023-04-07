@@ -145,34 +145,3 @@ INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 	('Barbell',NULL,1),
 	('EZ bar',NULL,1);
 
-
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
