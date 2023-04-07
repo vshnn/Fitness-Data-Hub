@@ -167,4 +167,31 @@ INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
 	('Barbell',NULL,5,1),
 	('EZ bar',NULL,5,1);
 
+-- inserting values to table member
+-- getting an error ERROR 1048 (23000): Column 'trainer_id' cannot be null
+INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
+	('Rohan','Palayam',9376843054,'2023-01-01',1,1,'Platinum'),
+	('Rahul','Kowdiar',9643122032,'2023-01-02',1,2,'Gold'),
+	('Shiva',NULL,9176646363,'2023-01-03',1,3,'Silver'),
+	('Ajay','Pettah',8261428506,'2022-07-01',1,4,'Platinum'),
+	('Karthik','Chakkai',8481814241 ,'2022-08-01',1,5,'Gold'),
+	('Rayhan','Pattom',9778543651,'2021-11-17',1,6,'Bronze'),
+	('Adithya','Kochuveli',7912673384,'2020-07-26',1,NULL,'Platinum'),
+	('Anjali','Attingal',7112504113,'2023-11-21',1,2,'Silver'),
+	('Alvin','Palayam',8158252272,'2023-01-01',1,4,'Platinum'),
+	('Janet','Kattakada',9963713806,'2019-05-30',1,NULL,'Silver'),
+	('Ahmed',NULL,8184177002,'2020-06-19',1,1,'Gold'),
+	('Merin','Perurkada',7241506567,'2023-02-09',1,3,'Gold'),
+	('Tessa','Kowdiar',7525145930,'2023-08-14',1,1,'Platinum'),
+	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
+	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
+	
+
+
+
+
+
+
+
+
 
