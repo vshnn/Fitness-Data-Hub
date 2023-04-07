@@ -25,6 +25,7 @@ CREATE TABLE membership_plan(
     amount INTEGER NOT NULL
 );
 
+-- (modified)
 CREATE TABLE member(
     member_id INTEGER PRIMARY KEY AUTO_INCREMENT,
     member_name VARCHAR(30) NOT NULL,
@@ -148,7 +149,7 @@ INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 -- 07/04/2023
 -- modified table equipment
 DELETE FROM equipment;
-ALTER TABLE equipment ADD column equipment_count INT(11);	
+ALTER TABLE equipment ADD column equipment_count INTEGER;	
 INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
 	('Dumbbell',2,6,1),
 	('Dumbbell',5,6,1),
@@ -166,9 +167,10 @@ INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
 	('Pull up bars',NULL,4,1),
 	('Barbell',NULL,5,1),
 	('EZ bar',NULL,5,1);
-
+	
+-- modified table member
+ALTER TABLE member MODIFY trainer_id INTEGER;
 -- inserting values to table member
--- getting an error ERROR 1048 (23000): Column 'trainer_id' cannot be null
 INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
 	('Rohan','Palayam',9376843054,'2023-01-01',1,1,'Platinum'),
 	('Rahul','Kowdiar',9643122032,'2023-01-02',1,2,'Gold'),
@@ -186,12 +188,3 @@ INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,membe
 	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
 	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
 	
-
-
-
-
-
-
-
-
-
