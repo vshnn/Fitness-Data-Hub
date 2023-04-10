@@ -25,6 +25,7 @@ CREATE TABLE membership_plan(
     amount INTEGER NOT NULL
 );
 
+-- (modified)
 CREATE TABLE member(
     member_id INTEGER PRIMARY KEY AUTO_INCREMENT,
     member_name VARCHAR(30) NOT NULL,
@@ -101,7 +102,7 @@ INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
 
 -- modified table membership_plan 
 ALTER TABLE membership_plan RENAME COLUMN expiry_date to validity;
-ALTER TABLE membership_plan MODIFY COLUMN validity INTEGER NOT NULL;
+ALTER TABLE membership_plan MODIFY COLUMN validity INT NOT NULL;
 
 -- inserting values to table membership_plan
 INSERT INTO membership_plan VALUES
@@ -113,7 +114,7 @@ INSERT INTO membership_plan VALUES
 	
 -- modified table equipment
 DROP TABLE using_equipment;
-ALTER TABLE equipment MODIFY equipment_id INTEGER(11) AUTO_INCREMENT;
+ALTER TABLE equipment MODIFY equipment_id INT(11) AUTO_INCREMENT;
 CREATE TABLE using_equipment(
     member_id INTEGER,
     trainer_id INTEGER,
@@ -148,7 +149,7 @@ INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
 -- 07/04/2023
 -- modified table equipment
 DELETE FROM equipment;
-ALTER TABLE equipment ADD column equipment_count INT(11);	
+ALTER TABLE equipment ADD column equipment_count INTEGER;	
 INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
 	('Dumbbell',2,6,1),
 	('Dumbbell',5,6,1),
@@ -166,5 +167,24 @@ INSERT INTO equipment(equipment_name,weight,equipment_count,gym_id) VALUES
 	('Pull up bars',NULL,4,1),
 	('Barbell',NULL,5,1),
 	('EZ bar',NULL,5,1);
-
-
+	
+-- modified table member
+ALTER TABLE member MODIFY trainer_id INTEGER;
+-- inserting values to table member
+INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
+	('Rohan','Palayam',9376843054,'2023-01-01',1,1,'Platinum'),
+	('Rahul','Kowdiar',9643122032,'2023-01-02',1,2,'Gold'),
+	('Shiva',NULL,9176646363,'2023-01-03',1,3,'Silver'),
+	('Ajay','Pettah',8261428506,'2022-07-01',1,4,'Platinum'),
+	('Karthik','Chakkai',8481814241 ,'2022-08-01',1,5,'Gold'),
+	('Rayhan','Pattom',9778543651,'2021-11-17',1,6,'Bronze'),
+	('Adithya','Kochuveli',7912673384,'2020-07-26',1,NULL,'Platinum'),
+	('Anjali','Attingal',7112504113,'2023-11-21',1,2,'Silver'),
+	('Alvin','Palayam',8158252272,'2023-01-01',1,4,'Platinum'),
+	('Janet','Kattakada',9963713806,'2019-05-30',1,NULL,'Silver'),
+	('Ahmed',NULL,8184177002,'2020-06-19',1,1,'Gold'),
+	('Merin','Perurkada',7241506567,'2023-02-09',1,3,'Gold'),
+	('Tessa','Kowdiar',7525145930,'2023-08-14',1,1,'Platinum'),
+	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
+	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
+	
