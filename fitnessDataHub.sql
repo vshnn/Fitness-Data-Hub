@@ -58,7 +58,7 @@ CREATE TABLE equipment(
     FOREIGN KEY (gym_id) REFERENCES gym(gym_id)
 );
 
-CREATE TABLE gives_suppliments(
+CREATE TABLE gives_supplements(
     member_id INTEGER,
     trainer_id INTEGER,
     date_of_intake DATE NOT NULL,
@@ -188,3 +188,71 @@ INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,membe
 	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
 	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
 	
+--11/04/2023
+
+--inserting values into table competition
+
+INSERT INTO competition (category_name,position,year,member_id) VALUES
+("Mens Physique",3,2023,2),
+("Bodybuilding",2,2022,5),
+("Classic Physique",5,2021,15),
+("Womens Physique",2,2023,8),
+("Mens Physique",5,2023,9),
+("Classic Physique",3,2020,7),
+("Bodybuilding",3,2023,13),
+("Bikini Physique",1,2023,12),
+("Bodybuilding",3,2021,6),
+("Mens Physique",4,2022,4),
+("Womens Physique",2,2020,14);
+
+--inserting values into table gives_supplements
+
+INSERT INTO gives_supplements VALUES
+(1,1,'2023-02-12','Creatine'),
+(3,3,'2023-02-12','BCAA'),
+(14,NULL,'2023-02-14','Mass-Gainer'),
+(9,4,'2023-02-16','Creatine'),
+(4,4,'2023-02-21','L-Arginine'),
+(3,3,'2023-02-22','Ashvagandha'),
+(2,2,'2023-02-22','Citrulline Malate'),
+(10,NULL,'2023-03-04','Creatine'),
+(6,6,'2023-03-05','L-Arginine'),
+(1,1,'2023-03-06','BCAA'),
+(3,3,'2023-03-06','Ashvagandha'),
+(8,2,'2023-03-07','Citrulline Malate'),
+(12,3,'2023-03-08','Mass-Gainer'),
+(9,4,'2023-03-09','Creatine');
+
+--inserting values into table log_book
+
+INSERT INTO log_book VALUES
+(2,'2023-03-02 13:14:07'),
+(5,'2023-03-02 13:46:34'),
+(14,'2023-03-03 05:32:06'),
+(7,'2023-03-03 07:34:05'),
+(10,'2023-03-04 05:32:23'),
+(14,'2023-03-04 14:23:24'),
+(1,'2023-03-04 18:45:54'),
+(11,'2023-03-04 20:34:45'),
+(13,'2023-03-06 05:23:45'),
+(11,'2023-03-06 18:45:54'),
+(2,'2023-03-07 06:56:01'),
+(8,'2023-03-07 07:34:05'),
+(3,'2023-03-09 08:56:44'),
+(12,'2023-03-09 18:02:00'),
+(4,'2023-03-10 05:23:53'),
+(13,'2023-03-12 06:34:23'),
+(5,'2023-03-12 12:34:23'),
+(8,'2023-03-12 12:34:23'),
+(9,'2023-03-13 06:34:23'),
+(12,'2023-03-13 16:14:29'),
+(4,'2023-03-13 19:54:45'),
+(2,'2023-03-14 06:04:27'),
+(6,'2023-03-14 14:56:01'),
+(15,'2023-03-14 20:34:22'),
+(3,'2023-03-16 06:09:10'),
+(6,'2023-03-16 08:39:23'),
+(12,'2023-03-17 08:33:43'),
+(9,'2023-03-18 13:45:34'),
+(4,'2023-03-19 08:04:56'),
+(10,'2023-03-19 15:32:23');
