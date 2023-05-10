@@ -291,3 +291,24 @@ INSERT INTO using_equipment VALUES
 (9, 4,25,'2023-03-18 13:45:34'),
 (4, 4,29,'2023-03-19 08:04:56'),
 (10, NULL,27,'2023-03-19 15:32:23');
+
+
+
+Dbms questions :
+
+	2.	Count the number of people trained by trainer trainer_name
+	3.	List the details of people who have used equipment equipment_name on a_date 
+	4.	Display the number of people subscribed to each membership in descending order of count 
+    12.  list members along with trainer participating in competition
+    16.  To calculate the monthly income to the gym    
+
+    5.	Write a procedure to edit details of an equipment . Handle exception for primary key
+    13.  write a procedure to edit the membership plans to rejection after a time
+
+    6.	Write a function which returns list of supplements available in the gym using cursors(comma separated)
+	10.	Write a function to create a view  of member names along with their trainer
+
+    7.	Write a trigger to remove trainers with zero years of experience 
+	8.	Write a trigger to remove members with no subscription plan 
+	9.	Write a trigger to capitalise the first letter of member name if it is lowercase 
+    14.  write a trigger to remove  members that have  expired their plan
