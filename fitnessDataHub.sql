@@ -323,7 +323,7 @@ Dbms questions :
     CALL edit_equipment(6,"Kettlebell",15,1,5);
 
 
-    6.  write a procedure to edit the membership plans to rejection after a time
+    6.  Write a procedure to edit the membership plans to rejection after a time
 
     DROP PROCEDURE IF EXISTS membership_plan_update;
     DELIMITER $$
@@ -456,3 +456,45 @@ Dbms questions :
 
     CREATE USER 'viewer'@'localhost' IDENTIFIED BY 'pass';
     GRANT SELECT ON fitness_data_hub.* TO 'viewer'@'localhost' WITH GRANT OPTION; 
+    
+    15. List the names of members who have won medals in any category and order them by category
+    
+    SELECT category_name , member_name 
+    FROM competition NATURAL JOIN member 
+    ORDER BY category_name ;
+    
+    16. Count the number of people that came to Gym on 4th March 2023
+    
+    SELECT count(distinct member_id)
+    FROM log_book 
+    WHERE login_date between '2023-03-04' and '2023-03-05' ;
+   
+    17.  Write a function to determine the supplement that is most used in the gym using cursor
+    
+    DROP FUNCTION IF EXISTS most_used_supplement;
+    DELIMITER $$
+    CREATE FUNCTION most_used_supplement()
+    RETURNS VARCHAR(30)
+    DETERMINISTIC
+    BEGIN
+    DECLARE Flag INT DEFAULT 0;
+    DECLARE current_element VARCHAR(30);
+    DECLARE current_count INT;
+    DECLARE max_element VARCHAR(30);
+    DECLARE max_count INT DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT supplement_name, count(*) FROM gives_supplements GROUP BY supplement_name;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET Flag = 1;
+    OPEN cur;
+    FETCH cur into current_element , current_count;
+    WHILE Flag < 1 DO
+    IF current_count > max_count THEN
+    SET max_count = current_count;
+    SET max_element = current_element;
+    END IF;
+    FETCH cur into current_element , current_count;
+    END WHILE;
+    CLOSE cur;
+    RETURN max_element;	
+    END $$
+    DELIMITER ;			
+    SELECT most_used_supplement();
