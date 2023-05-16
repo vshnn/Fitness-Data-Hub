@@ -451,3 +451,8 @@ Dbms questions :
 
     SELECT member_name FROM member 
     WHERE member_id NOT IN (SELECT DISTINCT(member_id) FROM using_equipment);
+
+    14. Create a New User with only read operation provilage for all tables
+
+    CREATE USER 'viewer'@'localhost' IDENTIFIED BY 'pass';
+    GRANT SELECT ON fitness_data_hub.* TO 'viewer'@'localhost' WITH GRANT OPTION; 
