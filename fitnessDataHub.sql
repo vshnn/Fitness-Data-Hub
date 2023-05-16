@@ -109,7 +109,8 @@ INSERT INTO membership_plan VALUES
 	('Platinum',12,15000),
 	('Gold',6,8000),
 	('Silver',3,5000 ),
-	('Bronze',1, 2000);
+	('Bronze',1, 2000),
+    ('Expired',0,0);
 
 	
 -- modified table equipment
@@ -126,26 +127,6 @@ CREATE TABLE using_equipment(
     FOREIGN KEY (equipment_id) REFERENCES equipment(equipment_id)
 );
 
--- inserting values to table equipment
-INSERT INTO equipment(equipment_name,weight,gym_id) VALUES
-	('Dumbbell',2,1),
-	('Dumbbell',5,1),
-	('Dumbbell',10,1),
-	('Kettlebell',8,1),
-	('Kettlebell',12,1),
-	('Kettlebell',16,1),
-	('Punching Bag',1,1),
-	('Treadmill',NULL,1),
-	('Skipping rope',NULL,1),
-	('Smith machine',NULL,1),
-	('Bench press machine',NULL,1),
-	('Leg press machine',NULL,1),
-	('Lats pulley',NULL,1),
-	('Pull up bars',NULL,1),
-	('Barbell',NULL,1),
-	('EZ bar',NULL,1);
-
-	
 -- 07/04/2023
 -- modified table equipment
 DELETE FROM equipment;
@@ -261,54 +242,212 @@ INSERT INTO log_book VALUES
 --inserting values into table using_equipment
 
 INSERT INTO using_equipment VALUES
-(2,2,19,'2023-03-02 13:14:07'),
-(5,5,17,'2023-03-02 13:46:34'),
-(14,NULL,29,'2023-03-03 05:32:06'),
-(7,NULL,22,'2023-03-03 07:34:05'),
-(10,NULL ,27,'2023-03-04 05:32:23'),
-(14,NULL ,23,'2023-03-04 14:23:24'),
-(1, 1,31,'2023-03-04 18:45:54'),
-(11,1 ,23,'2023-03-04 20:34:45'),
-(13, 1,19,'2023-03-06 05:23:45'),
-(11, 1,23,'2023-03-06 18:45:54'),
-(2, 2,32,'2023-03-07 06:56:01'),
-(8, 2,24,'2023-03-07 07:34:05'),
-(3, 3,31,'2023-03-09 08:56:44'),
-(12, 3,32,'2023-03-09 18:02:00'),
-(4, 4,25,'2023-03-10 05:23:53'),
-(13,1 ,19,'2023-03-12 06:34:23'),
-(5,5,29,'2023-03-12 12:34:23'),
-(8, 2,28,'2023-03-12 12:34:23'),
-(9, 4,28,'2023-03-13 06:34:23'),
-(12, 3,18,'2023-03-13 16:14:29'),
-(4, 4,31,'2023-03-13 19:54:45'),
-(2, 2,32,'2023-03-14 06:04:27'),
-(6, 6,31,'2023-03-14 14:56:01'),
-(15, 6,27,'2023-03-14 20:34:22'),
-(3, 3,23,'2023-03-16 06:09:10'),
-(6, 6,20,'2023-03-16 08:39:23'),
-(12, 3,30,'2023-03-17 08:33:43'),
-(9, 4,25,'2023-03-18 13:45:34'),
-(4, 4,29,'2023-03-19 08:04:56'),
-(10, NULL,27,'2023-03-19 15:32:23');
+(2,2,3,'2023-03-02 13:14:07'),
+(5,5,5,'2023-03-02 13:46:34'),
+(14,NULL,9,'2023-03-03 05:32:06'),
+(7,NULL,4,'2023-03-03 07:34:05'),
+(10,NULL ,13,'2023-03-04 05:32:23'),
+(14,NULL ,15,'2023-03-04 14:23:24'),
+(1, 1,1,'2023-03-04 18:45:54'),
+(11,1 ,16,'2023-03-04 20:34:45'),
+(13, 1,13,'2023-03-06 05:23:45'),
+(11, 1,11,'2023-03-06 18:45:54'),
+(2, 2,11,'2023-03-07 06:56:01'),
+(8, 2,10,'2023-03-07 07:34:05'),
+(3, 3,8,'2023-03-09 08:56:44'),
+(12, 3,3,'2023-03-09 18:02:00'),
+(4, 4,9,'2023-03-10 05:23:53'),
+(13,1 ,14,'2023-03-12 06:34:23'),
+(5,5,11,'2023-03-12 12:34:23'),
+(8, 2,9,'2023-03-12 12:34:23'),
+(9, 4,6,'2023-03-13 06:34:23'),
+(12, 3,2,'2023-03-13 16:14:29'),
+(4, 4,15,'2023-03-13 19:54:45'),
+(2, 2,14,'2023-03-14 06:04:27'),
+(6, 6,8,'2023-03-14 14:56:01'),
+(15, 6,11,'2023-03-14 20:34:22'),
+(3, 3,16,'2023-03-16 06:09:10'),
+(6, 6,7,'2023-03-16 08:39:23'),
+(12, 3,15,'2023-03-17 08:33:43'),
+(9, 4,2,'2023-03-18 13:45:34'),
+(4, 4,1,'2023-03-19 08:04:56'),
+(10, NULL,6,'2023-03-19 15:32:23');
 
 
 
 Dbms questions :
 
-	2.	Count the number of people trained by trainer trainer_name
-	3.	List the details of people who have used equipment equipment_name on a_date 
-	4.	Display the number of people subscribed to each membership in descending order of count 
-    12.  list members along with trainer participating in competition
-    16.  To calculate the monthly income to the gym    
+	1.	Count the number of people trained by trainer trainer_name
+
+    SELECT trainer_name,COUNT(member_id) AS 'Number of Pupil' FROM trainer
+    INNER JOIN member
+    ON trainer.trainer_id=member.trainer_id
+    GROUP BY trainer_name;
+
+	2.	List the details of people who have used equipment equipment_name on a_date 
+
+    SELECT DATE(date_of_use) AS "Date",member_name,equipment_name FROM using_equipment
+    NATURAL JOIN member
+    NATURAL JOIN equipment
+    ORDER BY date_of_use;
+
+	3.	Display the number of people subscribed to each membership in descending order of count 
+
+    SELECT type_name,COUNT(member_id) FROM member
+    INNER JOIN membership_plan
+    ON member.member_type=membership_plan.type_name
+    GROUP BY type_name;
+
+    4.  list members along with trainer participating in competition
+
+    SELECT member_name,trainer_name,category_name FROM competition
+    INNER JOIN member ON member.member_id=competition.member_id
+    NATURAL JOIN trainer ;
 
     5.	Write a procedure to edit details of an equipment . Handle exception for primary key
-    13.  write a procedure to edit the membership plans to rejection after a time
 
-    6.	Write a function which returns list of supplements available in the gym using cursors(comma separated)
-	10.	Write a function to create a view  of member names along with their trainer
+    DROP PROCEDURE IF EXISTS edit_equipment;
+    DELIMITER $$
+    CREATE PROCEDURE edit_equipment(id INTEGER,name VARCHAR(25),equipment_weight INTEGER,gym INTEGER,count INTEGER)
+    BEGIN
+    DECLARE highest_count INTEGER;
+    SELECT MAX(equipment_id) INTO highest_count FROM equipment;
+    IF id > highest_count OR id < 1 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No equipment available';
+    END IF;
+    UPDATE equipment SET equipment_name=name, weight=equipment_weight, equipment_count=count WHERE equipment_id=id;
+    END$$
+    DELIMITER ;
 
-    7.	Write a trigger to remove trainers with zero years of experience 
-	8.	Write a trigger to remove members with no subscription plan 
-	9.	Write a trigger to capitalise the first letter of member name if it is lowercase 
-    14.  write a trigger to remove  members that have  expired their plan
+    CALL edit_equipment(22,"Kettlebell",16,1,3);
+    CALL edit_equipment(6,"Kettlebell",15,1,5);
+
+
+    6.  write a procedure to edit the membership plans to rejection after a time
+
+    DROP PROCEDURE IF EXISTS membership_plan_update;
+    DELIMITER $$
+    CREATE PROCEDURE membership_plan_update()
+    BEGIN
+    DECLARE plan VARCHAR(15);
+    DECLARE date_of_join DATE;
+    DECLARE expiry INTEGER;
+    DECLARE id INTEGER;
+    DECLARE f INTEGER DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT member_id FROM member;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
+    OPEN cur;
+    loop1: LOOP
+    FETCH cur INTO id;
+    IF f=1 THEN
+    LEAVE loop1;
+    END IF;
+    SELECT member_type INTO plan FROM member WHERE member_id=id;
+    SELECT join_date INTO date_of_join FROM member WHERE member_id=id;
+    SELECT validity INTO expiry FROM membership_plan WHERE type_name=plan;
+    IF month(date_of_join)-month(CURDATE()) NOT BETWEEN -1*expiry AND expiry THEN
+    UPDATE member SET member_type="Expired",trainer_id=NULL WHERE member_id=id;
+    END IF;
+    END LOOP loop1;
+    CLOSE cur;
+    END $$
+    DELIMITER ;
+
+    CALL membership_plan_update();
+
+    7.	Write a function which returns list of supplements available in the gym using cursors(comma separated)
+
+    DROP FUNCTION IF EXISTS supplements;
+    DELIMITER $$
+    CREATE FUNCTION supplements()
+    RETURNS TEXT
+    DETERMINISTIC
+    BEGIN
+    DECLARE supplement VARCHAR(20);
+    DECLARE supplement_list TEXT DEFAULT '';
+    DECLARE f INTEGER DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT DISTINCT(supplement_name) FROM gives_supplements;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
+    OPEN cur;
+    loop1: LOOP
+    FETCH cur INTO supplement;
+    IF f=1 THEN LEAVE loop1;
+    END IF;
+    SET supplement_list = CONCAT(supplement_list,supplement,', ');
+    END LOOP loop1;
+    CLOSE cur;
+    RETURN supplement_list;
+    END $$
+    DELIMITER ;
+
+    SELECT supplements();
+
+	8.	Create a view  of member names along with their trainer
+
+    CREATE VIEW member_trainer_view AS 
+    SELECT member_name,trainer_name FROM member
+    INNER JOIN trainer ON member.trainer_id = trainer.trainer_id;
+
+    9.	Write a trigger to remove trainers with zero years of experience 
+
+    DROP TRIGGER IF EXISTS zero_exp;
+    DELIMITER $$
+    CREATE TRIGGER zero_exp
+    BEFORE INSERT ON trainer
+    FOR EACH ROW
+    BEGIN 
+    DELETE FROM trainer WHERE trainer_id = new.trainer_id;
+    END$$
+    DELIMITER ;
+
+    INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
+	('Roshan','Palayam',9446890901,0,1);
+
+    10. Create a view of members and the suppliments they have taken and the date of date_of_intake
+
+    CREATE VIEW member_supplement AS
+    SELECT member_name,supplement_name FROM member 
+    INNER JOIN gives_supplements ON member.member_id=gives_supplements.member_id;
+
+    11. Create a procedure to list the memebers who were in the competition in an year
+
+    DROP PROCEDURE IF EXISTS competition_member;
+    DELIMITER $$
+    CREATE PROCEDURE competition_member(in_year INTEGER)
+    BEGIN
+    SELECT member_name,category_name from member
+    INNER JOIN competition ON member.member_id = competition.member_id
+    WHERE year = in_year;
+    END$$
+    DELIMITER ;
+
+    CALL competition_member(2022);
+
+    12. Create a trigger to backup the member data to a new table
+
+    CREATE TABLE IF NOT EXISTS member_back_up(
+        member_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+        member_name VARCHAR(30) NOT NULL,
+        join_date DATE NOT NULL,
+        membership_plan VARCHAR(20) NOT NULL
+    );
+
+    DROP TRIGGER IF EXISTS member_back_up;
+    DELIMITER $$
+    CREATE TRIGGER member_back_up
+    BEFORE INSERT ON member
+    FOR EACH ROW
+    BEGIN
+    INSERT INTO member_back_up(member_name,join_date,membership_plan) 
+    VALUES (new.member_name,new.join_date,new.membership_plan);
+    END$$
+    DELIMITER ;
+
+    INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
+	('Jebin','Kowdiar',9564821356,'2023-04-25',1,4,'Silver'),
+	('Gopika','Pappanamkodu',9223290903,'2023-04-02',1,6,'Gold');
+
+    13. List the name of members who havenot used any of the equipments
+
+    SELECT member_name FROM member 
+    WHERE member_id NOT IN (SELECT DISTINCT(member_id) FROM using_equipment);
