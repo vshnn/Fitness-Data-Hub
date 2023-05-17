@@ -170,9 +170,9 @@ INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,membe
 	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
 	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
 	
---11/04/2023
+-- 11/04/2023
 
---inserting values into table competition
+-- inserting values into table competition
 
 INSERT INTO competition (category_name,position,year,member_id) VALUES
 ("Mens Physique",3,2023,2),
@@ -187,7 +187,7 @@ INSERT INTO competition (category_name,position,year,member_id) VALUES
 ("Mens Physique",4,2022,4),
 ("Womens Physique",2,2020,14);
 
---inserting values into table gives_supplements
+-- inserting values into table gives_supplements
 
 INSERT INTO gives_supplements VALUES
 (1,1,'2023-02-12','Creatine'),
@@ -205,7 +205,7 @@ INSERT INTO gives_supplements VALUES
 (12,3,'2023-03-08','Mass-Gainer'),
 (9,4,'2023-03-09','Creatine');
 
---inserting values into table log_book
+-- inserting values into table log_book
 
 INSERT INTO log_book VALUES
 (2,'2023-03-02 13:14:07'),
@@ -239,7 +239,7 @@ INSERT INTO log_book VALUES
 (4,'2023-03-19 08:04:56'),
 (10,'2023-03-19 15:32:23');
 
---inserting values into table using_equipment
+-- inserting values into table using_equipment
 
 INSERT INTO using_equipment VALUES
 (2,2,3,'2023-03-02 13:14:07'),
@@ -470,7 +470,7 @@ Dbms questions :
     FROM log_book 
     WHERE login_date between '2023-03-04' and '2023-03-05' ;
    
-    17.  Write a function to determine the supplement that is most used in the gym using cursor
+    17. Write a function to determine the supplement that is most used in the gym using cursor
     
     DROP FUNCTION IF EXISTS most_used_supplement;
     DELIMITER $$
