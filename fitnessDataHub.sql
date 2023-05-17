@@ -302,7 +302,7 @@ Dbms questions :
 
     SELECT member_name,trainer_name,category_name FROM competition
     INNER JOIN member ON member.member_id=competition.member_id
-    NATURAL JOIN trainer ;
+    INNER JOIN trainer ON trainer.trainer_id=member.trainer_id;
 
     5.	Write a procedure to edit details of an equipment . Handle exception for primary key
 
@@ -459,9 +459,10 @@ Dbms questions :
     
     15. List the names of members who have won medals in any category and order them by category
     
-    SELECT category_name , member_name 
+    SELECT category_name , member_name, position,year 
     FROM competition NATURAL JOIN member 
-    ORDER BY category_name ;
+    WHERE position <=3
+    ORDER BY position ;
     
     16. Count the number of people that came to Gym on 4th March 2023
     
@@ -496,5 +497,7 @@ Dbms questions :
     CLOSE cur;
     RETURN max_element;	
     END $$
-    DELIMITER ;			
+    DELIMITER ;
+    DELIMITER ;	
+
     SELECT most_used_supplement();
