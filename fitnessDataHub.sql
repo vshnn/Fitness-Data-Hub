@@ -478,27 +478,26 @@ Dbms questions :
     RETURNS VARCHAR(30)
     DETERMINISTIC
     BEGIN
-    DECLARE Flag INT DEFAULT 0;
+    DECLARE flag INT DEFAULT 0;
     DECLARE current_element VARCHAR(30);
     DECLARE current_count INT;
     DECLARE max_element VARCHAR(30);
     DECLARE max_count INT DEFAULT 0;
     DECLARE cur CURSOR FOR SELECT supplement_name, count(*) FROM gives_supplements GROUP BY supplement_name;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET Flag = 1;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
     OPEN cur;
-    FETCH cur into current_element , current_count;
-    WHILE Flag < 1 DO
+    FETCH cur INTO current_element , current_count;
+    WHILE flag < 1 DO
     IF current_count > max_count THEN
     SET max_count = current_count;
     SET max_element = current_element;
     END IF;
-    FETCH cur into current_element , current_count;
+    FETCH cur INTO current_element , current_count;
     END WHILE;
     CLOSE cur;
     RETURN max_element;	
     END $$
     DELIMITER ;
-    DELIMITER ;	
 
     SELECT most_used_supplement();
 
@@ -521,6 +520,29 @@ Dbms questions :
     FROM member 
     GROUP BY member_type order by count(*) desc;
 
-    20. Write a function to calculate the monthly income to the gym
+    20. Write a function to calculate monthly income to the gym
     
+    DROP FUNCTION IF EXISTS calculate_monthly_income;
+    DELIMITER $$
+    CREATE FUNCTION calculate_monthly_income()
+    RETURNS INT
+    DETERMINISTIC
+    BEGIN   
+    DECLARE amt INT;
+    DECLARE cnt INT;
+    DECLARE total INT DEFAULT 0;
+    DECLARE flag INT DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT amount , count(*) FROM membership_plan INNER JOIN member  ON type_name = member_type GROUP BY amount;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
+    OPEN cur;
+    FETCH cur INTO amt,cnt;
+    WHILE flag < 1 DO
+    SET total = total + amt*cnt;
+    FETCH cur INTO amt,cnt;
+    END WHILE;
+    CLOSE cur;
+    RETURN total;
+    END $$
+    DELIMITER ;
 
+    SELECT calculate_monthly_income();    
