@@ -501,3 +501,26 @@ Dbms questions :
     DELIMITER ;	
 
     SELECT most_used_supplement();
+
+    18. Write a procedure to add attribute 'salary' for trainers to table trainer depending on their experience
+
+    DROP PROCEDURE IF EXISTS make_salary();
+    DELIMITER $$
+    CREATE PROCEDURE make_salary()
+    BEGIN
+    ALTER TABLE trainer ADD salary BIGINT;
+    UPDATE trainer set salary = experience*3000;
+    END $$
+    DELIMITER ;    
+
+    CALL make_salary();
+
+    19. Display the number of people subscribed to each membership plan in descending order of count
+
+    SELECT member_type AS 'Plan',count(*) AS 'Number Of People'
+    FROM member 
+    GROUP BY member_type order by count(*) desc;
+
+    20. Write a function to calculate the monthly income to the gym
+    
+
