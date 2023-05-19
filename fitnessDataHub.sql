@@ -170,9 +170,9 @@ INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,membe
 	('Ashley','Pettah',9172432533,'2020-03-23',1,NULL,'Bronze'),
 	('Abel','Pattom',8229423323,'2021-01-12',1,6,'Silver');
 	
---11/04/2023
+-- 11/04/2023
 
---inserting values into table competition
+-- inserting values into table competition
 
 INSERT INTO competition (category_name,position,year,member_id) VALUES
 ("Mens Physique",3,2023,2),
@@ -187,7 +187,7 @@ INSERT INTO competition (category_name,position,year,member_id) VALUES
 ("Mens Physique",4,2022,4),
 ("Womens Physique",2,2020,14);
 
---inserting values into table gives_supplements
+-- inserting values into table gives_supplements
 
 INSERT INTO gives_supplements VALUES
 (1,1,'2023-02-12','Creatine'),
@@ -205,7 +205,7 @@ INSERT INTO gives_supplements VALUES
 (12,3,'2023-03-08','Mass-Gainer'),
 (9,4,'2023-03-09','Creatine');
 
---inserting values into table log_book
+-- inserting values into table log_book
 
 INSERT INTO log_book VALUES
 (2,'2023-03-02 13:14:07'),
@@ -239,7 +239,7 @@ INSERT INTO log_book VALUES
 (4,'2023-03-19 08:04:56'),
 (10,'2023-03-19 15:32:23');
 
---inserting values into table using_equipment
+-- inserting values into table using_equipment
 
 INSERT INTO using_equipment VALUES
 (2,2,3,'2023-03-02 13:14:07'),
@@ -474,7 +474,7 @@ Dbms questions :
     FROM log_book 
     WHERE DATE(login_date) = '2023-03-04';
    
-    17.  Write a function to determine the supplement that is most used in the gym using cursor
+    17. Write a function to determine the supplement that is most used in the gym using cursor
     
     DROP FUNCTION IF EXISTS most_used_supplement;
     DELIMITER $$
@@ -482,26 +482,71 @@ Dbms questions :
     RETURNS VARCHAR(30)
     DETERMINISTIC
     BEGIN
-    DECLARE Flag INT DEFAULT 0;
+    DECLARE flag INT DEFAULT 0;
     DECLARE current_element VARCHAR(30);
     DECLARE current_count INT;
     DECLARE max_element VARCHAR(30);
     DECLARE max_count INT DEFAULT 0;
     DECLARE cur CURSOR FOR SELECT supplement_name, count(*) FROM gives_supplements GROUP BY supplement_name;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET Flag = 1;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
     OPEN cur;
-    FETCH cur into current_element , current_count;
-    WHILE Flag < 1 DO
+    FETCH cur INTO current_element , current_count;
+    WHILE flag < 1 DO
     IF current_count > max_count THEN
     SET max_count = current_count;
     SET max_element = current_element;
     END IF;
-    FETCH cur into current_element , current_count;
+    FETCH cur INTO current_element , current_count;
     END WHILE;
     CLOSE cur;
     RETURN max_element;	
     END $$
     DELIMITER ;
-    DELIMITER ;	
 
     SELECT most_used_supplement();
+
+    18. Write a procedure to add attribute 'salary' for trainers to table trainer depending on their experience
+
+    DROP PROCEDURE IF EXISTS make_salary();
+    DELIMITER $$
+    CREATE PROCEDURE make_salary()
+    BEGIN
+    ALTER TABLE trainer ADD salary BIGINT;
+    UPDATE trainer set salary = experience*3000;
+    END $$
+    DELIMITER ;    
+
+    CALL make_salary();
+
+    19. Display the number of people subscribed to each membership plan in descending order of count
+
+    SELECT member_type AS 'Plan',count(*) AS 'Number Of People'
+    FROM member 
+    GROUP BY member_type order by count(*) desc;
+
+    20. Write a function to calculate monthly income to the gym
+    
+    DROP FUNCTION IF EXISTS calculate_monthly_income;
+    DELIMITER $$
+    CREATE FUNCTION calculate_monthly_income()
+    RETURNS INT
+    DETERMINISTIC
+    BEGIN   
+    DECLARE amt INT;
+    DECLARE cnt INT;
+    DECLARE total INT DEFAULT 0;
+    DECLARE flag INT DEFAULT 0;
+    DECLARE cur CURSOR FOR SELECT amount , count(*) FROM membership_plan INNER JOIN member  ON type_name = member_type GROUP BY amount;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
+    OPEN cur;
+    FETCH cur INTO amt,cnt;
+    WHILE flag < 1 DO
+    SET total = total + amt*cnt;
+    FETCH cur INTO amt,cnt;
+    END WHILE;
+    CLOSE cur;
+    RETURN total;
+    END $$
+    DELIMITER ;
+
+    SELECT calculate_monthly_income();    
