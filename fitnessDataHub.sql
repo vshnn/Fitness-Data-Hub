@@ -384,6 +384,7 @@ Dbms questions :
 
 	8.	Create a view  of member names along with their trainer
 
+    DROP VIEW IF EXISTS member_trainer_view;
     CREATE VIEW member_trainer_view AS 
     SELECT member_name,trainer_name FROM member
     INNER JOIN trainer ON member.trainer_id = trainer.trainer_id;
@@ -402,9 +403,12 @@ Dbms questions :
 
     INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
 	('Roshan','Palayam',9446890901,0,1);
+    INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
+	('Kalyani','Nedumangaadu',9495676708,0,1);
 
     10. Create a view of members and the suppliments they have taken and the date of date_of_intake
 
+    DROP VIEW IF EXISTS member_supplement;
     CREATE VIEW member_supplement AS
     SELECT member_name,supplement_name FROM member 
     INNER JOIN gives_supplements ON member.member_id=gives_supplements.member_id;
@@ -439,7 +443,7 @@ Dbms questions :
     FOR EACH ROW
     BEGIN
     INSERT INTO member_back_up(member_name,join_date,membership_plan) 
-    VALUES (new.member_name,new.join_date,new.membership_plan);
+    VALUES (new.member_name,new.join_date,new.member_type);
     END$$
     DELIMITER ;
 
@@ -457,7 +461,7 @@ Dbms questions :
     CREATE USER 'viewer'@'localhost' IDENTIFIED BY 'pass';
     GRANT SELECT ON fitness_data_hub.* TO 'viewer'@'localhost' WITH GRANT OPTION; 
     
-    15. List the names of members who have won medals in any category and order them by category
+    15. List the names of members who have won medals in any category and order them by position
     
     SELECT category_name , member_name, position,year 
     FROM competition NATURAL JOIN member 
@@ -468,7 +472,7 @@ Dbms questions :
     
     SELECT count(distinct member_id)
     FROM log_book 
-    WHERE login_date between '2023-03-04' and '2023-03-05' ;
+    WHERE DATE(login_date) = '2023-03-04';
    
     17.  Write a function to determine the supplement that is most used in the gym using cursor
     
