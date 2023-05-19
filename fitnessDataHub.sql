@@ -277,276 +277,270 @@ INSERT INTO using_equipment VALUES
 
 Dbms questions :
 
-	1.	Count the number of people trained by trainer trainer_name
+1.	Count the number of people trained by trainer trainer_name
 
-    SELECT trainer_name,COUNT(member_id) AS 'Number of Pupil' FROM trainer
-    INNER JOIN member
-    ON trainer.trainer_id=member.trainer_id
-    GROUP BY trainer_name;
+SELECT trainer_name,COUNT(member_id) AS 'Number of Pupil' FROM trainer
+INNER JOIN member
+ON trainer.trainer_id=member.trainer_id
+GROUP BY trainer_name;
 
-	2.	List the details of people who have used equipment equipment_name on a_date 
+2.	List the details of people who have used equipment equipment_name on a_date 
 
-    SELECT DATE(date_of_use) AS "Date",member_name,equipment_name FROM using_equipment
-    NATURAL JOIN member
-    NATURAL JOIN equipment
-    ORDER BY date_of_use;
+SELECT DATE(date_of_use) AS "Date",member_name,equipment_name FROM using_equipment
+NATURAL JOIN member
+NATURAL JOIN equipment
+ORDER BY date_of_use;
 
-	3.	Display the number of people subscribed to each membership in descending order of count 
+3.	Display the number of people subscribed to each membership in descending order of count 
 
-    SELECT type_name,COUNT(member_id) FROM member
-    INNER JOIN membership_plan
-    ON member.member_type=membership_plan.type_name
-    GROUP BY type_name;
+SELECT type_name,COUNT(member_id) FROM member
+INNER JOIN membership_plan
+ON member.member_type=membership_plan.type_name
+GROUP BY type_name;
 
-    4.  list members along with trainer participating in competition
+4.  list members along with trainer participating in competition
 
-    SELECT member_name,trainer_name,category_name FROM competition
-    INNER JOIN member ON member.member_id=competition.member_id
-    INNER JOIN trainer ON trainer.trainer_id=member.trainer_id;
+SELECT member_name,trainer_name,category_name FROM competition
+INNER JOIN member ON member.member_id=competition.member_id
+INNER JOIN trainer ON trainer.trainer_id=member.trainer_id;
 
-    5.	Write a procedure to edit details of an equipment . Handle exception for primary key
+5.	Write a procedure to edit details of an equipment . Handle exception for primary key
 
-    DROP PROCEDURE IF EXISTS edit_equipment;
-    DELIMITER $$
-    CREATE PROCEDURE edit_equipment(id INTEGER,name VARCHAR(25),equipment_weight INTEGER,gym INTEGER,count INTEGER)
-    BEGIN
-    DECLARE highest_count INTEGER;
-    SELECT MAX(equipment_id) INTO highest_count FROM equipment;
-    IF id > highest_count OR id < 1 THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No equipment available';
-    END IF;
-    UPDATE equipment SET equipment_name=name, weight=equipment_weight, equipment_count=count WHERE equipment_id=id;
-    END$$
-    DELIMITER ;
+DROP PROCEDURE IF EXISTS edit_equipment;
+DELIMITER $$
+CREATE PROCEDURE edit_equipment(id INTEGER,name VARCHAR(25),equipment_weight INTEGER,gym INTEGER,count INTEGER)
+BEGIN
+DECLARE highest_count INTEGER;
+SELECT MAX(equipment_id) INTO highest_count FROM equipment;
+IF id > highest_count OR id < 1 THEN
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'No equipment available';
+END IF;
+UPDATE equipment SET equipment_name=name, weight=equipment_weight, equipment_count=count WHERE equipment_id=id;
+END$$
+DELIMITER ;
 
-    CALL edit_equipment(22,"Kettlebell",16,1,3);
-    CALL edit_equipment(6,"Kettlebell",15,1,5);
+CALL edit_equipment(22,"Kettlebell",16,1,3);
+CALL edit_equipment(6,"Kettlebell",15,1,5);
 
 
-    6.  Write a procedure to edit the membership plans to rejection after a time
+6.  Write a procedure to edit the membership plans to rejection after a time
 
-    DROP PROCEDURE IF EXISTS membership_plan_update;
-    DELIMITER $$
-    CREATE PROCEDURE membership_plan_update()
-    BEGIN
-    DECLARE plan VARCHAR(15);
-    DECLARE date_of_join DATE;
-    DECLARE expiry INTEGER;
-    DECLARE id INTEGER;
-    DECLARE f INTEGER DEFAULT 0;
-    DECLARE cur CURSOR FOR SELECT member_id FROM member;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
-    OPEN cur;
-    loop1: LOOP
-    FETCH cur INTO id;
-    IF f=1 THEN
-    LEAVE loop1;
-    END IF;
-    SELECT member_type INTO plan FROM member WHERE member_id=id;
-    SELECT join_date INTO date_of_join FROM member WHERE member_id=id;
-    SELECT validity INTO expiry FROM membership_plan WHERE type_name=plan;
-    IF month(date_of_join)-month(CURDATE()) NOT BETWEEN -1*expiry AND expiry THEN
-    UPDATE member SET member_type="Expired",trainer_id=NULL WHERE member_id=id;
-    END IF;
-    END LOOP loop1;
-    CLOSE cur;
-    END $$
-    DELIMITER ;
+DROP PROCEDURE IF EXISTS membership_plan_update;
+DELIMITER $$
+CREATE PROCEDURE membership_plan_update()
+BEGIN
+DECLARE plan VARCHAR(15);
+DECLARE date_of_join DATE;
+DECLARE expiry INTEGER;
+DECLARE id INTEGER;
+DECLARE f INTEGER DEFAULT 0;
+DECLARE cur CURSOR FOR SELECT member_id FROM member;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
+OPEN cur;
+loop1: LOOP
+FETCH cur INTO id;
+IF f=1 THEN
+LEAVE loop1;
+END IF;
+SELECT member_type INTO plan FROM member WHERE member_id=id;
+SELECT join_date INTO date_of_join FROM member WHERE member_id=id;
+SELECT validity INTO expiry FROM membership_plan WHERE type_name=plan;
+IF month(date_of_join)-month(CURDATE()) NOT BETWEEN -1*expiry AND expiry THEN
+UPDATE member SET member_type="Expired",trainer_id=NULL WHERE member_id=id;
+END IF;
+END LOOP loop1;
+CLOSE cur;
+END $$
+DELIMITER ;
 
-    CALL membership_plan_update();
+CALL membership_plan_update();
 
-    7.	Write a function which returns list of supplements available in the gym using cursors(comma separated)
+7.	Write a function which returns list of supplements available in the gym using cursors(comma separated)
 
-    DROP FUNCTION IF EXISTS supplements;
-    DELIMITER $$
-    CREATE FUNCTION supplements()
-    RETURNS TEXT
-    DETERMINISTIC
-    BEGIN
-    DECLARE supplement VARCHAR(20);
-    DECLARE supplement_list TEXT DEFAULT '';
-    DECLARE f INTEGER DEFAULT 0;
-    DECLARE cur CURSOR FOR SELECT DISTINCT(supplement_name) FROM gives_supplements;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
-    OPEN cur;
-    loop1: LOOP
-    FETCH cur INTO supplement;
-    IF f=1 THEN LEAVE loop1;
-    END IF;
-    SET supplement_list = CONCAT(supplement_list,supplement,', ');
-    END LOOP loop1;
-    CLOSE cur;
-    RETURN supplement_list;
-    END $$
-    DELIMITER ;
+DROP FUNCTION IF EXISTS supplements;
+DELIMITER $$
+CREATE FUNCTION supplements()
+RETURNS TEXT
+DETERMINISTIC
+BEGIN
+DECLARE supplement VARCHAR(20);
+DECLARE supplement_list TEXT DEFAULT '';
+DECLARE f INTEGER DEFAULT 0;
+DECLARE cur CURSOR FOR SELECT DISTINCT(supplement_name) FROM gives_supplements;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET f=1;
+OPEN cur;
+loop1: LOOP
+FETCH cur INTO supplement;
+IF f=1 THEN LEAVE loop1;
+END IF;
+SET supplement_list = CONCAT(supplement_list,supplement,', ');
+END LOOP loop1;
+CLOSE cur;
+RETURN supplement_list;
+END $$
+DELIMITER ;
 
-    SELECT supplements();
+SELECT supplements();
 
-	8.	Create a view  of member names along with their trainer
+8.	Create a view  of member names along with their trainer
 
-    DROP VIEW IF EXISTS member_trainer_view;
-    CREATE VIEW member_trainer_view AS 
-    SELECT member_name,trainer_name FROM member
-    INNER JOIN trainer ON member.trainer_id = trainer.trainer_id;
+DROP VIEW IF EXISTS member_trainer_view;
+CREATE VIEW member_trainer_view AS 
+SELECT member_name,trainer_name FROM member
+INNER JOIN trainer ON member.trainer_id = trainer.trainer_id;
 
-    9.	Write a trigger to remove trainers with zero years of experience 
+9.	Write a trigger to remove trainers with zero years of experience 
 
-    DROP TRIGGER IF EXISTS zero_exp;
-    DELIMITER $$
-    CREATE TRIGGER zero_exp
-    BEFORE INSERT ON trainer
-    FOR EACH ROW
-    BEGIN 
-    DELETE FROM trainer WHERE trainer_id = new.trainer_id;
-    END$$
-    DELIMITER ;
+DROP TRIGGER IF EXISTS zero_exp;
+DELIMITER $$
+CREATE TRIGGER zero_exp
+BEFORE INSERT ON trainer
+FOR EACH ROW
+BEGIN 
+DELETE FROM trainer WHERE trainer_id = new.trainer_id;
+END$$
+DELIMITER ;
 
-    INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
-	('Roshan','Palayam',9446890901,0,1);
-    INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
-	('Kalyani','Nedumangaadu',9495676708,0,1);
+INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
+('Roshan','Palayam',9446890901,0,1);
+INSERT INTO trainer(trainer_name,address,contact,experience,gym_id) VALUES
+('Kalyani','Nedumangaadu',9495676708,0,1);
 
-    10. Create a view of members and the suppliments they have taken and the date of date_of_intake
+10. Create a view of members and the suppliments they have taken and the date of date_of_intake
 
-    DROP VIEW IF EXISTS member_supplement;
-    CREATE VIEW member_supplement AS
-    SELECT member_name,supplement_name FROM member 
-    INNER JOIN gives_supplements ON member.member_id=gives_supplements.member_id;
+DROP VIEW IF EXISTS member_supplement;
+CREATE VIEW member_supplement AS
+SELECT member_name,supplement_name FROM member 
+INNER JOIN gives_supplements ON member.member_id=gives_supplements.member_id;
 
-    11. Create a procedure to list the memebers who were in the competition in an year
+11. Create a procedure to list the memebers who were in the competition in an year
 
-    DROP PROCEDURE IF EXISTS competition_member;
-    DELIMITER $$
-    CREATE PROCEDURE competition_member(in_year INTEGER)
-    BEGIN
-    SELECT member_name,category_name from member
-    INNER JOIN competition ON member.member_id = competition.member_id
-    WHERE year = in_year;
-    END$$
-    DELIMITER ;
+DROP PROCEDURE IF EXISTS competition_member;
+DELIMITER $$
+CREATE PROCEDURE competition_member(in_year INTEGER)
+BEGIN
+SELECT member_name,category_name from member
+INNER JOIN competition ON member.member_id = competition.member_id
+WHERE year = in_year;
+END$$
+DELIMITER ;
 
-    CALL competition_member(2022);
+CALL competition_member(2022);
 
-    12. Create a trigger to backup the member data to a new table
+12. Create a trigger to backup the member data to a new table
 
-    CREATE TABLE IF NOT EXISTS member_back_up(
-        member_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-        member_name VARCHAR(30) NOT NULL,
-        join_date DATE NOT NULL,
-        membership_plan VARCHAR(20) NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS member_back_up(
+    member_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    member_name VARCHAR(30) NOT NULL,
+    join_date DATE NOT NULL,
+    membership_plan VARCHAR(20) NOT NULL
+);
 
-    DROP TRIGGER IF EXISTS member_back_up;
-    DELIMITER $$
-    CREATE TRIGGER member_back_up
-    BEFORE INSERT ON member
-    FOR EACH ROW
-    BEGIN
-    INSERT INTO member_back_up(member_name,join_date,membership_plan) 
-    VALUES (new.member_name,new.join_date,new.member_type);
-    END$$
-    DELIMITER ;
+DROP TRIGGER IF EXISTS member_back_up;
+DELIMITER $$
+CREATE TRIGGER member_back_up
+BEFORE INSERT ON member
+FOR EACH ROW
+BEGIN
+INSERT INTO member_back_up(member_name,join_date,membership_plan) 
+VALUES (new.member_name,new.join_date,new.member_type);
+END$$
+DELIMITER ;
 
-    INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
-	('Jebin','Kowdiar',9564821356,'2023-04-25',1,4,'Silver'),
-	('Gopika','Pappanamkodu',9223290903,'2023-04-02',1,6,'Gold');
+INSERT INTO member(member_name,address,contact,join_date,gym_id,trainer_id,member_type) VALUES
+('Jebin','Kowdiar',9564821356,'2023-04-25',1,4,'Silver'),
+('Gopika','Pappanamkodu',9223290903,'2023-04-02',1,6,'Gold');
 
-    13. List the name of members who havenot used any of the equipments
+13. List the name of members who havenot used any of the equipments
 
-    SELECT member_name FROM member 
-    WHERE member_id NOT IN (SELECT DISTINCT(member_id) FROM using_equipment);
+SELECT member_name FROM member 
+WHERE member_id NOT IN (SELECT DISTINCT(member_id) FROM using_equipment);
 
-    14. Create a New User with only read operation provilage for all tables
+14. Create a New User with only read operation provilage for all tables
 
-    CREATE USER 'viewer'@'localhost' IDENTIFIED BY 'pass';
-    GRANT SELECT ON fitness_data_hub.* TO 'viewer'@'localhost' WITH GRANT OPTION; 
-    
-    15. List the names of members who have won medals in any category and order them by position
-    
-    SELECT category_name , member_name, position,year 
-    FROM competition NATURAL JOIN member 
-    WHERE position <=3
-    ORDER BY position ;
-    
-    16. Count the number of people that came to Gym on 4th March 2023
-    
-    SELECT count(distinct member_id)
-    FROM log_book 
-    WHERE DATE(login_date) = '2023-03-04';
-   
-    17. Write a function to determine the supplement that is most used in the gym using cursor
-    
-    DROP FUNCTION IF EXISTS most_used_supplement;
-    DELIMITER $$
-    CREATE FUNCTION most_used_supplement()
-    RETURNS VARCHAR(30)
-    DETERMINISTIC
-    BEGIN
-    DECLARE flag INT DEFAULT 0;
-    DECLARE current_element VARCHAR(30);
-    DECLARE current_count INT;
-    DECLARE max_element VARCHAR(30);
-    DECLARE max_count INT DEFAULT 0;
-    DECLARE cur CURSOR FOR SELECT supplement_name, count(*) FROM gives_supplements GROUP BY supplement_name;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
-    OPEN cur;
-    FETCH cur INTO current_element , current_count;
-    WHILE flag < 1 DO
-    IF current_count > max_count THEN
-    SET max_count = current_count;
-    SET max_element = current_element;
-    END IF;
-    FETCH cur INTO current_element , current_count;
-    END WHILE;
-    CLOSE cur;
-    RETURN max_element;	
-    END $$
-    DELIMITER ;
+CREATE USER 'viewer'@'localhost' IDENTIFIED BY 'pass';
+GRANT SELECT ON fitness_data_hub.* TO 'viewer'@'localhost' WITH GRANT OPTION; 
 
-    SELECT most_used_supplement();
+15. List the names of members who have won medals in any category and order them by position
 
-    18. Write a procedure to add attribute 'salary' for trainers to table trainer depending on their experience
+SELECT category_name , member_name, position,year 
+FROM competition NATURAL JOIN member 
+WHERE position <=3
+ORDER BY position ;
 
-    DROP PROCEDURE IF EXISTS make_salary();
-    DELIMITER $$
-    CREATE PROCEDURE make_salary()
-    BEGIN
-    ALTER TABLE trainer ADD salary BIGINT;
-    UPDATE trainer set salary = experience*3000;
-    END $$
-    DELIMITER ;    
+16. Count the number of people that came to Gym on 4th March 2023
 
-    CALL make_salary();
+SELECT count(distinct member_id)
+FROM log_book 
+WHERE DATE(login_date) = '2023-03-04';
 
-    19. Display the number of people subscribed to each membership plan in descending order of count
+17. Write a function to determine the supplement that is most used in the gym using cursor
 
-    SELECT member_type AS 'Plan',count(*) AS 'Number Of People'
-    FROM member 
-    GROUP BY member_type order by count(*) desc;
+DROP FUNCTION IF EXISTS most_used_supplement;
+DELIMITER $$
+CREATE FUNCTION most_used_supplement()
+RETURNS VARCHAR(30)
+DETERMINISTIC
+BEGIN
+DECLARE flag INT DEFAULT 0;
+DECLARE current_element VARCHAR(30);
+DECLARE current_count INT;
+DECLARE max_element VARCHAR(30);
+DECLARE max_count INT DEFAULT 0;
+DECLARE cur CURSOR FOR SELECT supplement_name, count(*) FROM gives_supplements GROUP BY supplement_name;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
+OPEN cur;
+FETCH cur INTO current_element , current_count;
+WHILE flag < 1 DO
+IF current_count > max_count THEN
+SET max_count = current_count;
+SET max_element = current_element;
+END IF;
+FETCH cur INTO current_element , current_count;
+END WHILE;
+CLOSE cur;
+RETURN max_element;	
+END $$
+DELIMITER ;
 
-    20. Write a function to calculate monthly income to the gym
-    
-    DROP FUNCTION IF EXISTS calculate_monthly_income;
-    DELIMITER $$
-    CREATE FUNCTION calculate_monthly_income()
-    RETURNS INT
-    DETERMINISTIC
-    BEGIN   
-    DECLARE amt INT;
-    DECLARE cnt INT;
-    DECLARE total INT DEFAULT 0;
-    DECLARE flag INT DEFAULT 0;
-    DECLARE cur CURSOR FOR SELECT amount , count(*) FROM membership_plan INNER JOIN member  ON type_name = member_type GROUP BY amount;
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
-    OPEN cur;
-    FETCH cur INTO amt,cnt;
-    WHILE flag < 1 DO
-    SET total = total + amt*cnt;
-    FETCH cur INTO amt,cnt;
-    END WHILE;
-    CLOSE cur;
-    RETURN total;
-    END $$
-    DELIMITER ;
+SELECT most_used_supplement();
 
-    SELECT calculate_monthly_income();    
+18. Write a procedure to add attribute 'salary' for trainers to table trainer depending on their experience
+
+DROP PROCEDURE IF EXISTS make_salary;
+DELIMITER $$
+CREATE PROCEDURE make_salary()
+BEGIN
+ALTER TABLE trainer ADD salary BIGINT;
+UPDATE trainer set salary = experience*5000;
+END $$
+DELIMITER ;    
+
+CALL make_salary();
+
+19. Write a function to calculate current income to the gym
+
+DROP FUNCTION IF EXISTS calculate_current_income;
+DELIMITER $$
+CREATE FUNCTION calculate_current_income()
+RETURNS INT
+DETERMINISTIC
+BEGIN   
+DECLARE amt INT;
+DECLARE cnt INT;
+DECLARE total INT DEFAULT 0;
+DECLARE flag INT DEFAULT 0;
+DECLARE cur CURSOR FOR SELECT amount , count(*) FROM membership_plan INNER JOIN member  ON type_name = member_type GROUP BY amount;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET flag = 1;
+OPEN cur;
+FETCH cur INTO amt,cnt;
+WHILE flag < 1 DO
+SET total = total + amt*cnt;
+FETCH cur INTO amt,cnt;
+END WHILE;
+CLOSE cur;
+RETURN total;
+END $$
+DELIMITER ;
+
+SELECT calculate_current_income();    
